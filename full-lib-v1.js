@@ -3,7 +3,7 @@
  * It handles rendering, interaction events, positioning, and state management.
  * Units can be positioned absolutely or relative to other units, and can respond to various mouse events.
  */
-export class Unit {
+class Unit {
     /**
      * Creates a new Unit instance with the specified context and attributes.
      * @param {Context} context - The animation context this unit belongs to
@@ -262,7 +262,7 @@ export class Unit {
     }
 }
 
-export class ScheduledTask {
+class ScheduledTask {
     static INFINITE = -1; 
 
     /**
@@ -311,7 +311,7 @@ export class ScheduledTask {
     }
 }
 
-export class AnimationTask extends ScheduledTask {
+class AnimationTask extends ScheduledTask {
     /**
     * @param {string} name - Unique task name.
     * @param {number} startVal - The start value of the animation.
@@ -359,7 +359,7 @@ export class AnimationTask extends ScheduledTask {
     }
 }
 
-export class TaskScheduler {
+class TaskScheduler {
     constructor() {
         /** @type {ScheduledTask[]} */
         this.tasks = [];
@@ -451,7 +451,7 @@ export class TaskScheduler {
 /**
 * @param {Context} context - AnimateOne context, contains everything
 */
-export function registerDrawLoop(context) {
+function registerDrawLoop(context) {
     /**@type {TaskScheduler} */
     const scheduler = context.scheduler;
     scheduler.add(
@@ -471,7 +471,7 @@ export function registerDrawLoop(context) {
     )
 } 
 
-export function drawDefaultFactory(unit) {
+function drawDefaultFactory(unit) {
     return (context) => {
         function drawRoundedRect(ctx, x, y, width, height, radius) {
             radius = Math.min(radius, width / 2, height / 2);
@@ -625,11 +625,11 @@ export function drawDefaultFactory(unit) {
     };
 }
 
-export function drawNoneFactory(unit) {
+function drawNoneFactory(unit) {
     return (context) => {};
 }
 
-export function calculateCenterPosFactory(unit) {
+function calculateCenterPosFactory(unit) {
     return () => {
         return {
             x: unit.pos.x + unit.size.width / 2,
@@ -638,12 +638,12 @@ export function calculateCenterPosFactory(unit) {
     }
 }
 
-export function createTextStyle({ size = 16, family = "sans-serif", weight, style }) {
+function createTextStyle({ size = 16, family = "sans-serif", weight, style }) {
     const sizeStr = typeof size === "number" ? `${size}px` : size;
     return [style, weight, sizeStr, family].filter(Boolean).join(" ");
 }
 
-export function createFunctionPlotUnit(context, {
+function createFunctionPlotUnit(context, {
     fn,
     width,
     height,
@@ -691,7 +691,7 @@ export function createFunctionPlotUnit(context, {
     return unit;
 }
 
-export function createSliderUnit(context, {
+function createSliderUnit(context, {
     sliderName,
     text,
     min,
@@ -812,7 +812,7 @@ export function createSliderUnit(context, {
     };
 }
 
-export function createBarChart(context, {
+function createBarChart(context, {
     pos,
     keys,
     title = "",
@@ -944,7 +944,7 @@ export function createBarChart(context, {
     }
 }
 
-export function createTextBoxUnit(context, {
+function createTextBoxUnit(context, {
     name = context.randomName("text-box"),
     width = 200,
     height = 40,
@@ -999,7 +999,7 @@ export function createTextBoxUnit(context, {
 /**
 * @param {Unit} unit 
 */
-export function fadeOut(unit, duration) {
+function fadeOut(unit, duration) {
     /** @type {TaskScheduler} */
     const scheduler = unit.context.scheduler;
     scheduler.addAnim(
@@ -1012,7 +1012,7 @@ export function fadeOut(unit, duration) {
 /**
 * @param {Unit} unit 
 */
-export function fadeIn(unit, duration) {
+function fadeIn(unit, duration) {
     /** @type {TaskScheduler} */
     const scheduler = unit.context.scheduler;
     scheduler.addAnim(
@@ -1025,7 +1025,7 @@ export function fadeIn(unit, duration) {
 /**
 * @param {Unit} unit 
 */
-export function moveBy(unit, x, y, duration, curve) {
+function moveBy(unit, x, y, duration, curve) {
     /** @type {TaskScheduler} */
     const scheduler = unit.context.scheduler;
     scheduler.addAnim(
@@ -1049,7 +1049,7 @@ export function moveBy(unit, x, y, duration, curve) {
 * @param {number} [duration=500] - animation time in ms
 * @param {(t:number)=>number} [curve=linear] - interpolation curve
 */
-export function moveToUnit(direction, movingUnit, targetUnit, offset = {}, duration = 500, curve = linear) {
+function moveToUnit(direction, movingUnit, targetUnit, offset = {}, duration = 500, curve = linear) {
     const { x: padX = 0, y: padY = 0 } = offset;
     const dir = direction.toLowerCase();
     
@@ -1091,7 +1091,7 @@ export function moveToUnit(direction, movingUnit, targetUnit, offset = {}, durat
     moveBy(movingUnit, deltaX, deltaY, duration, curve);
 }
 
-export function applyHoverColor(unit, hoverColor) {
+function applyHoverColor(unit, hoverColor) {
     /**@type {Unit} */
     const u = unit;
     const mainPrimary = u.colors.primary;
@@ -1104,19 +1104,19 @@ export function applyHoverColor(unit, hoverColor) {
 //============================================================================================
 
 //linear
-export const linear = (x) => x; 
+const linear = (x) => x; 
 
 //sinusoidal function
-export const easeInOut1 = (x) => ((Math.sin(Math.PI * x - (Math.PI / 2)) / 2) + 0.5); 
+const easeInOut1 = (x) => ((Math.sin(Math.PI * x - (Math.PI / 2)) / 2) + 0.5); 
 
 //faster, sigmoid function
-export const easeInOut2 = (x) => (1 / (1 + Math.pow(Math.E, (-10 * (x - 0.5))))); 
+const easeInOut2 = (x) => (1 / (1 + Math.pow(Math.E, (-10 * (x - 0.5))))); 
 
 //============================================================================================
 //                             HIT TESTING FUNCTIONS
 //============================================================================================
 
-export function hitTestDefaultFactory(unit) {
+function hitTestDefaultFactory(unit) {
     return (x, y) => {
         const { x: cx, y: cy } = unit.getCenterPos();
         
@@ -1147,7 +1147,7 @@ export function hitTestDefaultFactory(unit) {
     };
 }
 
-export function hitTestLineFactory(unit) {
+function hitTestLineFactory(unit) {
     return (px, py) => {
         function distToSegmentSquared(px, py, x1, y1, x2, y2) {
             const l2 = (x2 - x1) ** 2 + (y2 - y1) ** 2;
@@ -1194,7 +1194,7 @@ export function hitTestLineFactory(unit) {
 * @param {Unit} unit 
 * @returns {() => { x: number, y: number, width: number, height: number }}
 */
-export function measuredBoundsDefaultFactory(unit) {
+function measuredBoundsDefaultFactory(unit) {
     return () => { 
         const { width, height } = unit.size;
         const scaleX = unit.scale?.x ?? 1;
@@ -1240,7 +1240,7 @@ export function measuredBoundsDefaultFactory(unit) {
     };
 }
 
-export class GestureDetector {
+class GestureDetector {
     constructor(context) {
         this.context = context;
 
@@ -1378,7 +1378,7 @@ export class GestureDetector {
 
 //should typically only be used for non-ui related values, like anything done with calculations,
 //or anything that should be displayed 
-export class DataStore {
+class DataStore {
     constructor() {
         this._data = {};
         this._listeners = {};
@@ -1433,7 +1433,7 @@ export class DataStore {
     }
 }
 
-export class Context {
+class Context {
     static SIZE_STORE_KEY = "CONTEXT::size";
     anchorNames = [
         ['top-left', 'top-center', 'top-right'],
