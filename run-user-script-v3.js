@@ -11,7 +11,7 @@
     const gestureDetector = new GestureDetector(context); 
     // @ts-ignore
     registerDrawLoop(context);
-    console.log(canvas, container, scheduler, store, context, gestureDetector);
+    // console.log(canvas, container, scheduler, store, context, gestureDetector);
 
     //GENERATED CODE STARTS HERE
 
